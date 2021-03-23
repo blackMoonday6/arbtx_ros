@@ -1,4 +1,4 @@
-# arbtx_ros
+# arbtx_ros_training
 aerobotix repo for ROS
 	
 	cd ~/catkin_ws
