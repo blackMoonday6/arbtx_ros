@@ -1,0 +1,18 @@
+<launch>
+
+  <node pkg="arbtx_ros_training" type="listener" name="listener">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="listenerPy.py" name="listenerPy">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="add_two_ints_server" name="add_two_ints_server">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="Multiply_two_ints_server" name="Multiply_two_ints_server">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="talker" name="talker">
+  </node>
+  
+</launch>

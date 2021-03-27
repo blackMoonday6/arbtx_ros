@@ -1,0 +1,7 @@
+<launch>
+
+  <include file="$(find arbtx_ros_training)/launch/launch_talker_listener.launch" />
+  <include file="$(find arbtx_ros_training)/launch/nodelet_launch.launch" />
+  <node pkg="arbtx_ros_training" type="listenerPy.py" name="listenerPy">
+  </node>
+</launch>
