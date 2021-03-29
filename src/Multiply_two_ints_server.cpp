@@ -4,9 +4,9 @@
 bool multiplying_callback(arbtx_ros_training::MultiplyTwoInts::Request  &req,
          arbtx_ros_training::MultiplyTwoInts::Response &res)
 {
-  res.mult = req.a * req.b;
+  res.Mult = req.a * req.b;
   ROS_INFO("request: x=%ld, y=%ld", (long int)req.a, (long int)req.b);
-  ROS_INFO("sending back response: [%ld]", (long int)res.mult);
+  ROS_INFO("sending back response: [%ld]", (long int)res.Mult);
   return true;
 }
 

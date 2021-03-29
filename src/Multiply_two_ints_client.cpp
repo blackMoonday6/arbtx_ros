@@ -18,7 +18,7 @@ int main(int argc, char **argv)
   srv.request.b = atoll(argv[2]);
   if (client.call(srv))
   {
-    ROS_INFO("tiplication: %ld", (long int)srv.response.mult);
+    ROS_INFO("Multiplication: %ld", (long int)srv.response.Mult);
   }
   else
   {
