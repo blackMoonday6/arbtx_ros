@@ -219,10 +219,22 @@ add_executable(add_two_ints_client src/add_two_ints_client.cpp)
 target_link_libraries(add_two_ints_client ${catkin_LIBRARIES})
 add_dependencies(add_two_ints_client arbtx_ros_training_gencpp)
 
-add_executable(Multiply_two_ints_server src/add_two_ints_server.cpp)
+add_executable(Multiply_two_ints_server src/Multiply_two_ints_server.cpp)
 target_link_libraries(Multiply_two_ints_server ${catkin_LIBRARIES})
 add_dependencies(Multiply_two_ints_server arbtx_ros_training_gencpp)
 
-add_executable(Multiply_two_ints_client src/add_two_ints_client.cpp)
+add_executable(Multiply_two_ints_client src/Multiply_two_ints_client.cpp)
 target_link_libraries(Multiply_two_ints_client ${catkin_LIBRARIES})
 add_dependencies(Multiply_two_ints_client arbtx_ros_training_gencpp)
+
+add_executable(randomX src/randomX.cpp)
+target_link_libraries(randomX ${catkin_LIBRARIES})
+add_dependencies(randomX arbtx_ros_training_generate_messages_cpp)
+
+add_executable(randomY src/randomY.cpp)
+target_link_libraries(randomY ${catkin_LIBRARIES})
+add_dependencies(randomY arbtx_ros_training_generate_messages_cpp)
+
+add_executable(calculate_cord src/calculate_cord.cpp)
+target_link_libraries(calculate_cord ${catkin_LIBRARIES})
+add_dependencies(calculate_cord arbtx_ros_training_generate_messages_cpp)

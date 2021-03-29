@@ -1,0 +1,18 @@
+<launch>
+
+  <node pkg="arbtx_ros_training" type="randomY" name="randomY">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="randomX" name="randomX">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="add_two_ints_server" name="add_two_ints_server">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="Multiply_two_ints_server" name="Multiply_two_ints_server">
+  </node>
+  
+  <node pkg="arbtx_ros_training" type="calculate_cord" name="calculate_cord">
+  </node>
+  
+</launch>
