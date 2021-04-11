@@ -41,6 +41,7 @@ void Y_CordCallback(const arbtx_ros_training::Num::ConstPtr& msg)
   srv2.request.b = Cord :: Xcord;
   
   srv3.request.a = Cord :: Sum;
+  
   srv3.request.b = Cord :: Multi;
   
   ros::ServiceClient client1 = (ros::ServiceClient)*client1Ptr;
@@ -65,7 +66,7 @@ void Y_CordCallback(const arbtx_ros_training::Num::ConstPtr& msg)
   }
   else
   {
-    ROS_ERROR("Failed to call service add_two_ints");
+    ROS_ERROR("Can't to call service add_two_ints");
   }
 }
 
