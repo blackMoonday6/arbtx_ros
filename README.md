@@ -2,6 +2,6 @@
 aerobotix repo for ROS
 	
 	cd ~/catkin_ws/src
-	mkdir arbtx_ros_training
 	git clone https://github.com/blackMoonday6/arbtx_ros
+	mv arbtx_ros/ arbtx_ros_training/
 	catkin_make
