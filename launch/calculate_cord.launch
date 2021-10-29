@@ -1,9 +1,9 @@
 <launch>
 
-  <node pkg="arbtx_ros_training" type="randomY" name="randomY">
+  <node pkg="arbtx_ros_training" type="randomY" name="randomY" output="screen">
   </node>
   
-  <node pkg="arbtx_ros_training" type="randomX" name="randomX">
+  <node pkg="arbtx_ros_training" type="randomX" name="randomX" output="screen">
   </node>
   
   <node pkg="arbtx_ros_training" type="add_two_ints_server" name="add_two_ints_server">
@@ -12,7 +12,7 @@
   <node pkg="arbtx_ros_training" type="Multiply_two_ints_server" name="Multiply_two_ints_server">
   </node>
   
-  <node pkg="arbtx_ros_training" type="calculate_cord" name="calculate_cord">
+  <node pkg="arbtx_ros_training" type="calculate_cord" name="calculate_cord" output="screen">
   </node>
   
 </launch>
