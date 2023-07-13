@@ -1,13 +1,43 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-
+#include "std_msgs/Bool.h"
 #include <sstream>
+#include <camera_control_msgs/GetIntegerValue.h>
+#include <camera_control_msgs/SetIntegerValue.h>
+#include <visio_msgs/setEject.h>
+#include <std_srvs/SetBool.h>
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+bool Eject =false;
+int duration=0;
+/*void chatterCallback(const std_msgs::Bool::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%s]", (msg->data) ? "EJECt":"don't eject");
+  Eject=msg->data;
+}*/
+
+bool SetEjectCB(visio_msgs::setEject::Request  &req,//std_srvs::SetBool
+         visio_msgs::setEject::Response &res)
+{
+  /*res.sum = req.a + req.b;
+  ROS_INFO("request: x=%ld, y=%ld", (long int)req.a, (long int)req.b);
+  ROS_INFO("sending back response: [%ld]", (long int)res.sum);*/
+  //
+  Eject=req.data;
+  duration=req.duration;
+  return true;
+}
+
 int main(int argc, char **argv)
 {
+
+  camera_control_msgs::GetIntegerValue PhCelluleSrv;
+std_srvs::SetBool srv;
+camera_control_msgs::SetIntegerValue modeSrv;
+camera_control_msgs::SetIntegerValue sourceSrv;
+camera_control_msgs::SetIntegerValue selectorSrv;
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
    * any ROS arguments and name remapping that were provided at the command line.
@@ -45,8 +75,38 @@ int main(int argc, char **argv)
    * buffer up before throwing some away.
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+  ros::ServiceClient PhCelluleClient = n.serviceClient<camera_control_msgs::GetIntegerValue>("/pylon_backCamera_node/get_line_status");
+  ros::ServiceClient modeCam1Client = n.serviceClient<camera_control_msgs::SetIntegerValue>("/pylon_backCamera_node/set_line_mode");
+  ros::ServiceClient sourceCam1Client = n.serviceClient<camera_control_msgs::SetIntegerValue>("/pylon_backCamera_node/set_line_source");//ros::ServiceClient selectorClient ;
+  ros::ServiceClient selectorCam1Client = n.serviceClient<camera_control_msgs::SetIntegerValue>("/pylon_backCamera_node/set_line_selector");
+	ros::ServiceClient EVerinClient = n.serviceClient<std_srvs::SetBool>("/pylon_backCamera_node/set_user_output_1");
+	ros::ServiceClient SVerinClient = n.serviceClient<std_srvs::SetBool>("/pylon_backCamera_node/set_user_output_0");
+  ros::ServiceServer service = n.advertiseService("/setEject", SetEjectCB);
 
-  ros::Rate loop_rate(50);
+  ros::Rate loop_rate(200);
+  
+  //ros::Subscriber sub = n.subscribe("/Ejection", 1000, chatterCallback);
+  selectorSrv.request.value=2;//choose line for lights line 03 for rouge
+    modeSrv.request.value=1;//select mode output
+    sourceSrv.request.value=2;
+    srv.request.data=true; 
+    if(selectorCam1Client.call(selectorSrv))//affect line
+      if(modeCam1Client.call(modeSrv))//affect selected mode (output)
+        if( sourceCam1Client.call(sourceSrv))//affect source output1
+          EVerinClient.call(srv);
+  selectorSrv.request.value=1;//choose line for lights line 02 for rouge
+	modeSrv.request.value=1;//select mode output
+	sourceSrv.request.value=1;//select source user output 1
+	srv.request.data=false; //affect state to data
+	if(selectorCam1Client.call(selectorSrv))//affect line
+		if(modeCam1Client.call(sourceSrv))//affect selected mode (output)
+			if (sourceCam1Client.call(sourceSrv))//affect source 
+				SVerinClient.call(srv);
+  
+  selectorSrv.request.value=0;//choose line for photo cellule
+	modeSrv.request.value=0; //select mode input
+	if(selectorCam1Client.call(selectorSrv))//affect line to be selected
+		modeCam1Client.call(modeSrv);
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -58,26 +118,46 @@ int main(int argc, char **argv)
     /**
      * This is a message object. You stuff it with data, and then publish it.
      */
-    std_msgs::String msg;
+    /*std_msgs::String msg;
 
     std::stringstream ss;
     ss << "hello world " << count;
-    msg.data = ss.str();
+    msg.data = ss.str();*/
+    bool state;
+    if(PhCelluleClient.call(PhCelluleSrv))//get status of the line
+		state=PhCelluleSrv.response.value;
+    //select source user output 2
+     //affect state to data
+     //ROS_INFO("%s", state? "here product":"NO PRODUCT");
+    if((state)&&(Eject))
+    { ROS_INFO("I heard: [%s]", (state) ? "EJECT":"don't eject");
+      
+    
+    ros::Duration(0.01*duration).sleep();//10 for cam 01 and 25 for the the others
+      srv.request.data=true;
+      SVerinClient.call(srv);
+      srv.request.data=false;
+      EVerinClient.call(srv);
+    ros::Duration(0.15).sleep();
 
-    ROS_INFO("%s", msg.data.c_str());
-
+      srv.request.data=false;
+      SVerinClient.call(srv);
+      srv.request.data=true;
+      EVerinClient.call(srv);
+      Eject=false;
+    }
     /**
      * The publish() function is how you send messages. The parameter
      * is the message object. The type of this object must agree with the type
      * given as a template parameter to the advertise<>() call, as was done
      * in the constructor above.
      */
-    chatter_pub.publish(msg);
+    //chatter_pub.publish(msg);
 
     ros::spinOnce();
 
     loop_rate.sleep();
-    ++count;
+    //++count;
   }
 
 
